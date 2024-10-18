@@ -21,10 +21,12 @@ Tank <- R6Class("Tank",
   
   public = list(
     capacity = NULL,
+    level = NULL,
     
-    initialize = function(id, coord, capacity) {
+    initialize = function(id, coord, capacity, init_level) {
       super$initialize(id, coord)
       self$capacity <- capacity
+      self$level <- init_level
     }
   )
 )
