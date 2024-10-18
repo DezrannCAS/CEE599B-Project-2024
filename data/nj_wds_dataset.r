@@ -1,26 +1,16 @@
+rm(list = ls())
+
 library(epanetReader)
 library(dplyr)
 library(tidyr)
+library(here)
 
-rm(list = ls())
-setwd("/home/esteban_nb/dirhw/cee599b/project")
-
+setwd(here("data"))
 
 ################# Load the dataset #################
 
 nj_network <- read.inp("NJ1.inp")
 print(names(nj_network))
-
-#setEPS()
-#postscript("NJ1_net.eps")
-pdf("NJ1_net.pdf")
-plot(nj_network,
-     lwd.pipes = 0.0, #aint working
-     lwd.tanks = 3,
-     lwd.reservoirs = 3,
-     lwd.pumps = 2.5,
-     lwd.valves = 2)
-dev.off()
 
 # Basic exploration of dataset
 get_element_count <- function(component) {
