@@ -1,3 +1,10 @@
+rm(list = ls())
+
+library(ggplot2)
+library(CSV)
+library(here)
+
+fig_path <- here("fig")
 
 ################### Plot network ###################
 
