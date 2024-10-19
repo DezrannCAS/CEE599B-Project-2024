@@ -128,15 +128,20 @@ print(pattern_counts)
 
 ######### Convert into separate CSV files #########
 
-# Nodes:
-# ------ Junctions: ID, 3D-coordinates, base demand, pattern ID
-# ------ Tanks: ID, 3D-coordinates, init level, capacity
-# Edges:
-# ------ Pipes: ID, node1, node2
-# ------ Pumps: ID, node1, node2, curve ID      -- check whether pumps are already pipes
-# Patterns, curves and controls                 -- check temporal coherence
-# Clean off the links that are closed, the junctions with 0-pattern (ie `28-W15`, `25-W38`, `27-W20`, `31-W21`), and the closed pumps
+# Files:
+# 1. Nodes:
+# ----- Junctions: ID, 3D-coordinates, base demand, pattern ID
+# ----- Tanks: ID, 3D-coordinates, init level, capacity
+# 2. Edges:
+# ----- Pipes: ID, node1, node2
+# ----- Pumps: ID, node1, node2, curve ID
+# 3. Patterns, curves and control
 
+# Instructions:
+# Clean off the closed junctions, and the closed pumps, look for links with missing nodes
+# Maybe also delete the junctions with 0-pattern (ie `28-W15`, `25-W38`, `27-W20`, `31-W21`)
+# Set all indices to string (in particular "start" in pipes.csv & "start"+"end" in pumps.csv)
+# Check whether pumps are already pipes + check temporal coherence (esp for point 3.)
 
 # Extract data
 all_junctions <- merge(
@@ -144,6 +149,10 @@ all_junctions <- merge(
   nj_network$Coordinates[, c("Node", "X.coord", "Y.coord")],
   by.x = "ID", by.y = "Node"
 )
+all_junctions$ID <- as.character(all_junctions$ID) # format everything...
+all_junctions$Elevation <- as.numeric(all_junctions$Elevation)
+all_junctions$Demand <- as.numeric(all_junctions$Demand)
+all_junctions$Pattern <- as.character(all_junctions$Pattern)
 all_junctions <- all_junctions[, c("ID", "X.coord", "Y.coord", "Elevation", "Demand", "Pattern")]
 colnames(all_junctions) <- c("id", "x", "y", "z", "demand", "pattern")
 
@@ -157,20 +166,27 @@ tanks <- merge(
   nj_network$Coordinates[, c("Node", "X.coord", "Y.coord")],
   by.x = "ID", by.y = "Node"
 )
+tanks$ID <- as.character(tanks$ID)
+tanks$Elevation <- as.numeric(tanks$Elevation)
+tanks$InitLevel <- as.numeric(tanks$InitLevel)
+tanks$MaxLevel <- as.numeric(tanks$MaxLevel)
 tanks <- tanks[, c("ID", "X.coord", "Y.coord", "Elevation", "InitLevel", "MaxLevel")]
 colnames(tanks) <- c("id", "x", "y", "z", "init", "capacity")
 
 pipes <- nj_network$Pipes[nj_network$Pipes$Status == "Open", c("ID", "Node1", "Node2")]  # Only open pipes
+pipes$ID <- as.character(pipes$ID)
+pipes$Node1 <- as.character(pipes$Node1)
+pipes$Node2 <- as.character(pipes$Node2)
 colnames(pipes) <- c("id", "start", "end")
 
 pumps <- nj_network$Pumps[, c("ID", "Node1", "Node2", "Parameters")]
+pumps$ID <- as.character(pumps$ID)
+pumps$Node1 <- as.character(pumps$Node1)
+pumps$Node2 <- as.character(pumps$Node2)
+pumps$Parameters <- as.numeric(pumps$Parameters)
 closed_ids <- nj_network$Status$ID[nj_network$Status$Status == "Closed"]
 pumps <- pumps[!pumps$ID %in% closed_ids, ] # Delete closed pumps
 colnames(pumps) <- c("id", "start", "end", "curve")
-
-patterns <- nj_network$Patterns
-curves <- nj_network$Curves
-controls <- nj_network$Controls
 
 # Check the dataset
 check_nans <- function(df, component_name) {
@@ -204,9 +220,9 @@ write.csv(pumps, "csv/pumps.csv", row.names = FALSE)
 # Save patterns, curves and controls in CSV format
 patterns_df <- do.call(rbind,
                        lapply(names(nj_network$Patterns), function(key) {
-                         data.frame(Pattern = key, 
-                                    Value = nj_network$Patterns[[key]],
-                                    Index = seq_along(nj_network$Patterns[[key]]))
+                         data.frame(key = as.character(key), 
+                                    value = as.numeric(nj_network$Patterns[[key]]),
+                                    index = seq_along(nj_network$Patterns[[key]]))
                        }))
 write.csv(patterns_df, "csv/patterns.csv", row.names = FALSE)
 
@@ -214,16 +230,16 @@ curves_df <- do.call(rbind,
                      lapply(names(nj_network$Curves), function(curve_name) {
                        X_vals <- nj_network$Curves[[curve_name]]$X
                        Y_vals <- nj_network$Curves[[curve_name]]$Y
-                       data.frame(Curve = curve_name, X = X_vals, Y = Y_vals)
+                       data.frame(key = as.character(curve_name), x = as.numeric(X_vals), y = as.numeric(Y_vals))
                      }))
 write.csv(curves_df, "csv/curves.csv", row.names = FALSE)
 
 parse_control <- function(entry) {
   matches <- regmatches(entry, regexec("LINK (\\d+) (\\S+) AT TIME (\\S+)", entry))
   data.frame(
-    Link = matches[[1]][2],             # link number
-    State = matches[[1]][3],            # state (e.g., "CLOSED", "1.00")
-    Time = as.numeric(matches[[1]][4])  # time
+    link = as.character(matches[[1]][2]),   # link number
+    state = as.character(matches[[1]][3]),  # state (e.g., "CLOSED", "1.00")
+    time = as.numeric(matches[[1]][4])      # time
   )
 }
 controls_df <- do.call(rbind, lapply(nj_network$Controls, parse_control))
