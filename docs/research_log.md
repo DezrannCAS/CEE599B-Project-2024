@@ -42,7 +42,17 @@ The curves for the pumps are three- or four-point curves, with 2D points: head g
 
 ### 2. Basic data analysis
 
-**Goal:** Output basic plots (graphs and time series) and statistics; understand the [network model](https://epanet22.readthedocs.io/en/latest/3_network_model.html), in particular the curves (for pumps) and patterns (for junctions) + flow model -- maybe check also frequency of controls, etc
+**Goal:** Output basic plots (graphs and time series) and statistics (node degree, edge density, centrality); maybe check also frequency of controls, etc
+
+### 3. WDS as Graph
+
+**Goal:** Understand the [network model](https://epanet22.readthedocs.io/en/latest/3_network_model.html), in particular the curves (for pumps) and patterns (for junctions) + flow model
+
+**Methods:** 
+
+* Directed graph: Directed flow through pipes.
+* Weighted graph: Edges are weighted via flow or water travel time, computed as $$T = \frac{L}{V \times 3600}$$ where $T$ is in hours, $L$ in meters and $V$ in metres per second.
+* Temporal graph: The flow is recorded at 1-h intervals.
 
 ## Reflections
 ... 
