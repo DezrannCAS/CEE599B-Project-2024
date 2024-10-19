@@ -89,13 +89,14 @@ See also these [papers with code](https://paperswithcode.com/task/spectral-graph
 
 ### 4. Uncertainty Propagation
 
-**References: **
+**References:**
 
 #. [Rebrova & Salanevich (2024)](https://doi.org/10.48550/arXiv.2306.15810): “On Graph Uncertainty Principle and Eigenvector Delocalization”, with [code available](https://github.com/erebrova/uncertainty-delocalization)
 #. [Arola-Fernandez et al. (2020)](https://doi.org/10.1063/1.5129630): "Uncertainty propagation in complex networks: from noisy links to critical properties"
 #. [Ji et al (2023)](https://doi.org/10.1016/j.physrep.2023.03.005): "Signal propagation in complex networks"
 
 ### 5. GNN for State Estimation
+
 **References:**
 
 #. [Pagani et al. (2021)](https://doi.org/10.1145/3461838): "Neural Network Approximation of Graph Fourier Transform for Sparse Sampling of Networked Dynamics"

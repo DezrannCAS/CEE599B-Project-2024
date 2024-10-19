@@ -36,7 +36,9 @@
 
 We also have some labels providing geographic references (towns, roads, infrastructures, etc).
 
-There are 18 different patterns: 14977 junctions are type "1", and 1 junction for every remaining type. All of these special junctions (other than type "1") have negative demand (-450, -700, -4900, -1000, -1400, -1900, -2100): do they represent inflows other than tanks?. 4 of these patterns only contains $0$ ("28-W15", "25-W38", "27-W20", "31-W21").
+There are 18 different patterns: 14977 junctions are type "1", and 1 junction for every remaining type. All of these special junctions (other than type "1") have negative demand (-450, -700, -4900, -1000, -1400, -1900, -2100): do they represent inflows other than tanks? Four of these patterns only contains $0$ ("28-W15", "25-W38", "27-W20", "31-W21").
+
+The curves for the pumps contain data for X and Y, of size either 3 or 4 (check how this works).
 
 ### 2. Basic data analysis
 
