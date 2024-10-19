@@ -5,17 +5,19 @@ Edge <- R6Class("Edge",
     node1 = NULL,
     node2 = NULL,
     flow_rate = NULL,
-    
+
     initialize = function(id, node1, node2, flow_rate) {
       self$id <- id
       self$node1 <- node1
       self$node2 <- node2
       self$flow_rate <- flow_rate
     },
-    
-    # Abstract-like method
+
     print_edge = function() {
-      stop("This method must be implemented by subclasses.")
+      cat("Pipe ID:", self$id, 
+          "- Node1:", self$node1$id, 
+          "- Node2:", self$node2$id, 
+          "- Flow Rate:", self$flow_rate, "\n")
     }
   )
 )
@@ -23,17 +25,15 @@ Edge <- R6Class("Edge",
 # Pipe subclass
 Pipe <- R6Class("Pipe",
   inherit = Edge,
-  
-  public = list(
-    # Do we add length and diameter?
 
-    initialize = function(id, node1, node2, flow_rate) {
+  public = list(
+    length = NULL,
+    diameter = NULL,
+
+    initialize = function(id, node1, node2, flow_rate, length, diameter) {
       super$initialize(id, node1, node2, flow_rate)
-    },
-    
-    # Concrete method
-    print_edge = function() {
-      cat("Pipe ID:", self$id, "- Node1:", self$node1, "- Node2:", self$node2, "- Flow Rate:", self$flow_rate, "\n")
+      self$length <- length
+      self$diameter <- diameter
     }
   )
 )
@@ -43,16 +43,13 @@ Pump <- R6Class("Pump",
   inherit = Edge,
   
   public = list(
+    curve_points = data.frame(),
     efficiency = NULL,
     
-    initialize = function(id, node1, node2, efficiency) {
-      super$initialize(id, node1, node2)
+    initialize = function(id, node1, node2, flow_rate, curve_points, efficiency) {
+      super$initialize(id, node1, node2, flow_rate)
+      self$curve_points <- curve_points
       self$efficiency <- efficiency
-    },
-    
-    # Concrete method
-    print_edge = function() {
-      cat("Pump ID:", self$id, "- Node1:", self$node1, "- Node2:", self$node2, "- Efficiency:", self$efficiency, "\n")
     }
   )
 )
