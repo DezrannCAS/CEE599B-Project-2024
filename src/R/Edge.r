@@ -4,11 +4,13 @@ Edge <- R6Class("Edge",
     id = NULL,
     node1 = NULL,
     node2 = NULL,
+    flow_rate = NULL,
     
-    initialize = function(id, node1, node2) {
+    initialize = function(id, node1, node2, flow_rate) {
       self$id <- id
       self$node1 <- node1
       self$node2 <- node2
+      self$flow_rate <- flow_rate
     },
     
     # Abstract-like method
@@ -23,11 +25,10 @@ Pipe <- R6Class("Pipe",
   inherit = Edge,
   
   public = list(
-    flow_rate = NULL,
-    
+    # Do we add length and diameter?
+
     initialize = function(id, node1, node2, flow_rate) {
-      super$initialize(id, node1, node2)
-      self$flow_rate <- flow_rate
+      super$initialize(id, node1, node2, flow_rate)
     },
     
     # Concrete method
