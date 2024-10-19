@@ -139,21 +139,18 @@ print(pattern_counts)
 
 
 # Extract data
-junctions <- merge(
-  nj_network$Junctions[nj_network$Junctions$Pattern == "1", c("ID", "Elevation", "Demand")],
+all_junctions <- merge(
+  nj_network$Junctions[, c("ID", "Elevation", "Demand", "Pattern")], 
   nj_network$Coordinates[, c("Node", "X.coord", "Y.coord")],
   by.x = "ID", by.y = "Node"
 )
-junctions <- junctions[, c("ID", "X.coord", "Y.coord", "Elevation", "Demand")]
-colnames(junctions) <- c("id", "x", "y", "z", "demand")
+all_junctions <- all_junctions[, c("ID", "X.coord", "Y.coord", "Elevation", "Demand", "Pattern")]
+colnames(all_junctions) <- c("id", "x", "y", "z", "demand", "pattern")
 
-special_junctions <- merge(
-  nj_network$Junctions[nj_network$Junctions$Pattern != "1", c("ID", "Elevation", "Demand", "Pattern")],
-  nj_network$Coordinates[, c("Node", "X.coord", "Y.coord")],
-  by.x = "ID", by.y = "Node"
-)
-special_junctions <- junctions[, c("ID", "X.coord", "Y.coord", "Elevation", "Demand", "Pattern")]
-colnames(special_junctions) <- c("id", "x", "y", "z", "demand", "pattern")
+standard_junctions <- subset(all_junctions, pattern == "1")
+standard_junctions <- standard_junctions[, c("id", "x", "y", "z", "demand")]
+
+special_junctions <- subset(all_junctions, pattern != "1")
 
 tanks <- merge(
   nj_network$Tanks[, c("ID", "Elevation", "InitLevel", "MaxLevel")],
@@ -183,12 +180,12 @@ check_nans <- function(df, component_name) {
     print(nan_values)
   }
 }
-check_nans(junctions, "Junctions")
+check_nans(all_junctions, "Junctions")
 check_nans(pipes, "Pipes")
 
 # Identify junctions with 0-pattern
 zero_patterns <- c("28-W15", "25-W38", "27-W20", "31-W21")
-zero_junctions <- junctions[junctions$pattern %in% zero_patterns, ]
+zero_junctions <- all_junctions[all_junctions$pattern %in% zero_patterns, ]
 if (nrow(zero_junctions) > 0) {
   cat("Junctions with 0-pattern found:\n")
   print(zero_junctions)
@@ -198,36 +195,36 @@ if (nrow(zero_junctions) > 0) {
 }
 
 # Save clean data
-write.csv(junctions, "junctions.csv", row.names = FALSE)
-write.csv(special_junctions, "special_junctions.csv", row.names = FALSE)
-write.csv(tanks, "tanks.csv", row.names = FALSE)
-write.csv(pipes, "pipes.csv", row.names = FALSE)
-write.csv(pumps, "pumps.csv", row.names = FALSE)
+write.csv(standard_junctions, "csv/junctions.csv", row.names = FALSE)
+write.csv(special_junctions, "csv/special_junctions.csv", row.names = FALSE)
+write.csv(tanks, "csv/tanks.csv", row.names = FALSE)
+write.csv(pipes, "csv/pipes.csv", row.names = FALSE)
+write.csv(pumps, "csv/pumps.csv", row.names = FALSE)
 
-# Save patterns, curves and controls in CVS format
-patterns_df <- do.call(rbind, 
+# Save patterns, curves and controls in CSV format
+patterns_df <- do.call(rbind,
                        lapply(names(nj_network$Patterns), function(key) {
                          data.frame(Pattern = key, 
                                     Value = nj_network$Patterns[[key]],
                                     Index = seq_along(nj_network$Patterns[[key]]))
                        }))
-write.csv(patterns_df, "patterns.csv", row.names = FALSE)
+write.csv(patterns_df, "csv/patterns.csv", row.names = FALSE)
 
 curves_df <- do.call(rbind,
-                     lapply(names(Curves), function(curve_name) {
-                       data.frame(Curve = curve_name, 
-                                  X = Curves[[curve_name]]$X, 
-                                  Y = Curves[[curve_name]]$Y)
+                     lapply(names(nj_network$Curves), function(curve_name) {
+                       X_vals <- nj_network$Curves[[curve_name]]$X
+                       Y_vals <- nj_network$Curves[[curve_name]]$Y
+                       data.frame(Curve = curve_name, X = X_vals, Y = Y_vals)
                      }))
-write.csv(curves, "curves.csv", row.names = FALSE)
+write.csv(curves_df, "csv/curves.csv", row.names = FALSE)
 
 parse_control <- function(entry) {
   matches <- regmatches(entry, regexec("LINK (\\d+) (\\S+) AT TIME (\\S+)", entry))
   data.frame(
-    Link = matches[[1]][2],      # link number
-    State = matches[[1]][3],     # state (e.g., "CLOSED", "1.00")
-    Time = as.numeric(matches[[1]][4]) # time
+    Link = matches[[1]][2],             # link number
+    State = matches[[1]][3],            # state (e.g., "CLOSED", "1.00")
+    Time = as.numeric(matches[[1]][4])  # time
   )
 }
-controls_df <- do.call(rbind, lapply(controls, parse_control))
-write.csv(controls_df, "controls.cvs", row.names = FALSE)
+controls_df <- do.call(rbind, lapply(nj_network$Controls, parse_control))
+write.csv(controls_df, "csv/controls.csv", row.names = FALSE)
