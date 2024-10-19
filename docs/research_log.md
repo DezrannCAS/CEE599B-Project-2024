@@ -27,7 +27,7 @@
 - Pumps' global efficiency is 85%
 - We also have the curves for all pumps
 - There are 126 controls, that are time-based rules for the pumps (closing, opening or setting to a certain value)
-- Base demand load is given for all junctions, this base demand is then multiplied by the demand pattern to get the actual demand at any given time
+- The demand (load coefficient) is given for all junctions, this coefficient is then multiplied by the demand pattern to get the actual demand at any given time
 - There are no vertices defined: hence we are representing pipes as straight lines between nodes
 - Temporal resolution:
 	* Time step: 1 hour
@@ -36,13 +36,13 @@
 
 We also have some labels providing geographic references (towns, roads, infrastructures, etc).
 
-There are 18 different patterns: 14977 junctions are type "1", and 1 junction for every remaining type. All of these special junctions (other than type "1") have negative demand (-450, -700, -4900, -1000, -1400, -1900, -2100): do they represent inflows other than tanks? Four of these patterns only contains $0$ ("28-W15", "25-W38", "27-W20", "31-W21").
+There are 18 different patterns: 14977 junctions are type "1", and 1 junction for every remaining type. All of these special junctions (other than type "1") have negative demand (-450, -700, -4900, -1000, -1400, -1900, -2100): do they represent inflows other than tanks? Four of these patterns only contains zeros ("28-W15", "25-W38", "27-W20", "31-W21").
 
-The curves for the pumps contain data for X and Y, of size either 3 or 4 (check how this works).
+The curves for the pumps are three- or four-point curves, with 2D points: head gain (ft) on the $y$-axis and flow rate (gpm) on the $x$-axis. Write the function to fit a continuous function of the form $h_G = A-Bq^C$, where $h_g=$ head gain, $q=$ flow rate, and $A, B, C$ are constants.
 
 ### 2. Basic data analysis
 
-**Goal:** Output basic plots (graphs and time series) and statistics; understand curves (for pumps) and patterns (for junctions) -- maybe check also frequency of controls, etc
+**Goal:** Output basic plots (graphs and time series) and statistics; understand the [network model](https://epanet22.readthedocs.io/en/latest/3_network_model.html), in particular the curves (for pumps) and patterns (for junctions) + flow model -- maybe check also frequency of controls, etc
 
 ## Reflections
 ... 
