@@ -2,7 +2,7 @@
 load_junctions <- function(graph, filepath) {
   data <- read_csv(filepath)
   for (i in 1:nrow(data)) {
-    stopifnot(!is.null(data$id[i]))
+    #stopifnot(!is.null(data$id[i]))
     coord <- c(data$x[i], data$y[i], data$z[i])
     graph$add_node(Junction$new(data$id[i], coord, data$demand[i]))
   }
@@ -12,7 +12,7 @@ load_junctions <- function(graph, filepath) {
 load_tanks <- function(graph, filepath) {
   data <- read_csv(filepath)
   for (i in 1:nrow(data)) {
-    stopifnot(!is.null(data$id[i]))
+    #stopifnot(!is.null(data$id[i]))
     coord <- c(data$x[i], data$y[i], data$z[i])
     graph$add_node(Tank$new(data$id[i], coord, data$capacity[i], data$init[i]))
   }
@@ -24,11 +24,10 @@ load_pipes <- function(graph, filepath) {
   total_rows <- nrow(data)
 
   for (i in 1:total_rows) {
-    node1 <- graph$get_node(as.character(data$start[i]))
-    node2 <- graph$get_node(as.character(data$end[i]))
-    # check again dataset, turn all IDs in strings -precise the types in classes
+    node1 <- graph$get_node(data$start[i])
+    node2 <- graph$get_node(data$end[i])
 
-    # Check if both nodes exist in the graph
+    # Check that both nodes exist in the graph
     if (is.null(node1)) {
       cat("Node", node1_id, "does not exist in the graph. Skipping pipe", data$id[i], "\n")
       next
@@ -37,11 +36,11 @@ load_pipes <- function(graph, filepath) {
       cat("Node", node2_id, "does not exist in the graph. Skipping pipe", data$id[i], "\n")
       next
     }
-    # Remove the links that led to closed nodes (that have been removed)
+    # this will skip potential edges not linked to nodes
 
     graph$add_edge(Pipe$new(data$id[i], node1, node2, NULL, NULL, NULL))
 
-    # Print progress
+    # Print progress (this loader takes some time...)
     if (i %% 100 == 0) {
       cat(sprintf("Progress: %d/%d (%.2f%%)\n", i, total_rows, i/total_rows*100))
     }
@@ -53,8 +52,8 @@ load_pumps <- function(graph, filepath, curves_path) {
   data <- read_csv(filepath)
   curves <- read_csv(curves_path)
   for (i in 1:nrow(data)) {
-    node1 <- graph$get_node(as.character(data$start[i]))
-    node2 <- graph$get_node(as.character(data$end[i]))
+    node1 <- graph$get_node(data$start[i])
+    node2 <- graph$get_node(data$end[i])
     curve_points <- subset(curves, Curve == data$curve[i])
     graph$add_edge(Pump$new(data$id[i], node1, node2, NULL, curve_points, 0.85))
   }
@@ -83,7 +82,7 @@ save_graph <- function(graph, file_path) {
   cat("Graph saved to", file_path, "\n")
 }
 
-load_graph <- function(graph, file_path) {
+load_graph <- function(file_path) {
   graph <- readRDS(file_path)
   cat("Graph loaded from", file_path, "\n")
   return(graph)
