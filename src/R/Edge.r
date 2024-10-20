@@ -14,9 +14,9 @@ Edge <- R6Class("Edge",
     },
 
     print_edge = function() {
-      cat("Edge ID:", self$id, 
-          "- Start:", self$node1$id, 
-          "- End:", self$node2$id
+      cat("    Edge", self$id, 
+          "(start:", self$node1$id, 
+          ", end:", self$node2$id, ")")
     }
   )
 )
