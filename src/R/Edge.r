@@ -14,10 +14,9 @@ Edge <- R6Class("Edge",
     },
 
     print_edge = function() {
-      cat("Pipe ID:", self$id, 
-          "- Node1:", self$node1$id, 
-          "- Node2:", self$node2$id, 
-          "- Flow Rate:", self$flow_rate, "\n")
+      cat("Edge ID:", self$id, 
+          "- Start:", self$node1$id, 
+          "- End:", self$node2$id
     }
   )
 )

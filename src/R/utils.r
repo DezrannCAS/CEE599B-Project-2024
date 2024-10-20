@@ -29,11 +29,11 @@ load_pipes <- function(graph, filepath) {
 
     # Check that both nodes exist in the graph
     if (is.null(node1)) {
-      cat("Node", node1_id, "does not exist in the graph. Skipping pipe", data$id[i], "\n")
+      cat("Node", data$start[i], "does not exist in the graph. Skipping pipe", data$id[i], "\n")
       next
     }
     if (is.null(node2)) {
-      cat("Node", node2_id, "does not exist in the graph. Skipping pipe", data$id[i], "\n")
+      cat("Node", data$end[i], "does not exist in the graph. Skipping pipe", data$id[i], "\n")
       next
     }
     # this will skip potential edges not linked to nodes
