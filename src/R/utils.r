@@ -54,7 +54,7 @@ load_pumps <- function(graph, filepath, curves_path) {
   for (i in 1:nrow(data)) {
     node1 <- graph$get_node(data$start[i])
     node2 <- graph$get_node(data$end[i])
-    curve_points <- subset(curves, Curve == data$curve[i])
+    curve_points <- subset(curves, key == data$curve[i])
     graph$add_edge(Pump$new(data$id[i], node1, node2, NULL, curve_points, 0.85))
   }
 }
