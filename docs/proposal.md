@@ -1,6 +1,11 @@
 # Statistical Methods for Water Distribution Networks
 **Esteban Nocet-Binois**
 
+Github page: [CEE599B-Project-2024](https://github.com/DezrannCAS/CEE599B-Project-2024.git) 
+* See [docs](https://github.com/DezrannCAS/CEE599B-Project-2024/tree/main/docs) for proposal and current progress.
+* See [src](https://github.com/DezrannCAS/CEE599B-Project-2024/tree/main/src) for source code (containing graph in R, methods, and eventually analysis).
+* See [data](https://github.com/DezrannCAS/CEE599B-Project-2024/tree/main/data) for original =NJ1.ipn= file, as well as my data pipeline and the resulting =.csv= files.
+
 ## Research Purpose
 
 The goal is to explore statistical methods on graphs such as model selection and graph parameter estimation, uncertainty propagation, correlation and clustering in graphs, going beyond simple measures of graph topology (number of edges, degree of nodes, average path length, centrality, etc), in order to tackle:
