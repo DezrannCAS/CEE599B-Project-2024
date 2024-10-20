@@ -16,8 +16,10 @@ fig_path <- here("fig")
 data_path <- here("data", "csv")
 
 # Load graph
-graph <- load_graph(here("src", "njgraph.rds"))
-
+execution_time <- system.time({
+  graph <- load_graph(here("src", "njgraph.rds"))
+})["elapsed"]
+cat("Time to execute load_graph:", execution_time, "seconds\n")
 
 cat("\nGraph Structure:\n")
 graph$display_graph()
