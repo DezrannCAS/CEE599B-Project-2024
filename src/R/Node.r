@@ -20,7 +20,7 @@ Node <- R6Class("Node",
     },
 
     print_node = function(showDetails = TRUE) {
-      cat("Node", self$id, "with coordinates:", self$x, self$y, self$z, "\n")
+      cat("Node", self$id, "with coordinates:", self$x, ",", self$y, ",", self$z, "\n")
       if (showDetails && length(self$adjacencyList) > 0) {
         cat("--- Connected edges:\n")
         for (edge in self$adjacencyList) {
