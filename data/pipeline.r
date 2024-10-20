@@ -183,7 +183,7 @@ pumps <- nj_network$Pumps[, c("ID", "Node1", "Node2", "Parameters")]
 pumps$ID <- as.character(pumps$ID)
 pumps$Node1 <- as.character(pumps$Node1)
 pumps$Node2 <- as.character(pumps$Node2)
-pumps$Parameters <- as.numeric(pumps$Parameters)
+pumps$Parameters <- as.character(pumps$Parameters)
 closed_ids <- nj_network$Status$ID[nj_network$Status$Status == "Closed"]
 pumps <- pumps[!pumps$ID %in% closed_ids, ] # Delete closed pumps
 colnames(pumps) <- c("id", "start", "end", "curve")
