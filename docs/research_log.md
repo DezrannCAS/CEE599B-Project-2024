@@ -28,7 +28,7 @@
 - We also have the curves for all pumps
 - There are 126 controls, that are time-based rules for the pumps (closing, opening or setting to a certain value)
 - The demand (load coefficient) is given for all junctions, this coefficient is then multiplied by the demand pattern to get the actual demand at any given time
-- There are no vertices defined: hence we are representing pipes as straight lines between nodes
+- There are no vertices defined: hence we are representing pipes as straight lines between nodes (but we know the actual length of the pipes, as well as the diameter)
 - Temporal resolution:
 	* Time step: 1 hour
 	* Simulation duration: 48 hours -- however, each pattern has 80 multipliers, suggesting a simulation period of 80 hours...
