@@ -46,13 +46,17 @@ The curves for the pumps are three- or four-point curves, with 2D points: head g
 
 ### 3. WDS as Graph
 
-**Goal:** Understand the [network model](https://epanet22.readthedocs.io/en/latest/3_network_model.html), in particular the curves (for pumps) and patterns (for junctions) + flow model
+**Goal:** Understand the [network model](https://epanet22.readthedocs.io/en/latest/3_network_model.html), in particular the curves (for pumps) and patterns (for junctions) + flow model. Derive pressure levels over time at the nodes given initial tank levels, pump switching rules, and demand at nodes.
 
-**Methods:** 
+**Model:** 
 
 * Directed graph: Directed flow through pipes.
 * Weighted graph: Edges are weighted via flow or water travel time, computed as $$T = \frac{L}{V \times 3600}$$ where $T$ is in hours, $L$ in meters and $V$ in metres per second.
 * Temporal graph: The flow is recorded at 1-h intervals.
+
+### 4. Disruptions in WDS
+
+**Goal:** Estimate the effect on water supply of different types of disruptions (at junctions, pumps or tanks), i.e. the fraction of fully served nodes (or supply gap).
 
 ## Reflections
 ... 
