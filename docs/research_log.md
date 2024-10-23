@@ -58,7 +58,8 @@ Node-level dynamics: mass balance differential equation. Each node in the networ
 
 $$ \frac{dx_i}{dt} = f_i(x_i,t) + \sum_{j\in N_i} g_{ij}(x_i, x_j, t)$$
 
-Here, $f_i(x_i,t) = -d_i(t)$ the demand at node $i$, and $g_{ij}(x_i, x_j, t) = f_{i \leftarrow j}(t) + \frac{1}{N} out_i(t)$ the flux from node $j$ to $i$ and $out_i$ is the outflux.
+Here, $f_i(x_i,t) = -d_i(t)$ the demand at node $i$, and $g_{ij}(x_i, x_j, t) = f_{i \leftarrow j}(t) + \frac{1}{N} out_i(t)$ the flux from node $j$ to $i$ and $out_i$ is the outflux. Checkout Graph-ODE: [Fang et al. (2021)](https://doi.org/10.1145/3447548.3467430), [Zhuang et al. (2023)](https://openreview.net/forum?id=SJg9z6VFDr), [Huand et al. (2023)](https://doi.org/10.1145/3580305.3599362), [Prasse & van Mieghem (2022)](https://doi.org/10.1073/pnas.2205517119) (and also higher-order graph ODE: [Luo et al., 2023](https://openreview.net/forum?id=9iChKP4k32)).
+
 
 ### 4. Disruptions in WDS
 
@@ -68,4 +69,6 @@ Here, $f_i(x_i,t) = -d_i(t)$ the demand at node $i$, and $g_{ij}(x_i, x_j, t) = 
 ... 
 
 ## Future Work
+So far we have been considering dynamic state changes over a static network topology.
+
 ...
