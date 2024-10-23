@@ -54,6 +54,12 @@ The curves for the pumps are three- or four-point curves, with 2D points: head g
 * Weighted graph: Edges are weighted via flow or water travel time, computed as $$T = \frac{L}{V \times 3600}$$ where $T$ is in hours, $L$ in meters and $V$ in metres per second.
 * Temporal graph: The flow is recorded at 1-h intervals.
 
+Node-level dynamics: mass balance differential equation. Each node in the network can be described by its own differential equation of the form:
+
+$$ \frac{dx_i}{dt} = f_i(x_i,t) + \sum_{j\in N_i} g_{ij}(x_i, x_j, t)$$
+
+Here, $f_i(x_i,t) = -d_i(t)$ the demand at node $i$, and $g_{ij}(x_i, x_j, t) = f_{i \leftarrow j}(t) + \frac{1}{N} out_i(t)$ the flux from node $j$ to $i$ and $out_i$ is the outflux.
+
 ### 4. Disruptions in WDS
 
 **Goal:** Estimate the effect on water supply of different types of disruptions (at junctions, pumps or tanks), i.e. the fraction of fully served nodes (or supply gap).
