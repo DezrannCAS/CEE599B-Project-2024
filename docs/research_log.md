@@ -64,11 +64,11 @@ Here, $f_i(x_i,t) = -d_i(t)$ the demand at node $i$, and $g_{ij}(x_i, x_j, t) = 
 
 Checkout [Simas et al. (2021)](https://doi.org/10.1093/comnet/cnab021)'s article "The distance backbone of complex networks".
 
-### Hypothesis testing
+### 5. Hypothesis testing
 
 What features of the WDS can be approximated with a random graph, and what cannot.
 
-### 5. Disruptions in WDS
+### 6. Disruptions in WDS
 
 **Goal:** Estimate the effect on water supply of different types of disruptions (at junctions, pumps or tanks), i.e. the fraction of fully served nodes (or supply gap).
 
