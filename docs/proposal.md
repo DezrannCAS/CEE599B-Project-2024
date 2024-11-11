@@ -30,6 +30,8 @@ See references in Section 4.2.
 
 These articles from researchers at the Università di Firenze [Arrighi et al. (2017)](https://doi.org/10.5194/nhess-17-2109-2017), [Tarani et al. (2019)](https://doi.org/10.1007/978-3-319-95597-1_8) and [Arrighi et al. (2021)](https://doi.org/10.5194/nhess-21-1955-2021) can be interesting with that respect, however they also seem to perform quasi-static sensitivity analysis. One option could be to find a dataset of water precipitation in the same region as the distribution network, and estimate the network's response to potential flooding (by setting a threshold water level, past which disruption would be assumed). Yet the results can not be validated without real data on the state of the network (or at least on supply shortfalls at demand nodes).
 
+**Research question:** To what extent does network topology influence WDSs' performance; what topological attributes are key contributing factors, and what can the gap with hydrolic models tell us?
+
 # Dataset
 
 We need a dataset that contains:
