@@ -125,6 +125,7 @@ cat("Patterns count in Junctions")
 pattern_counts <- table(nj_network$Junctions$Pattern)
 print(pattern_counts)
 
+# stop()
 
 ######### Convert into separate CSV files #########
 
@@ -173,11 +174,12 @@ tanks$MaxLevel <- as.numeric(tanks$MaxLevel)
 tanks <- tanks[, c("ID", "X.coord", "Y.coord", "Elevation", "InitLevel", "MaxLevel")]
 colnames(tanks) <- c("id", "x", "y", "z", "init", "capacity")
 
-pipes <- nj_network$Pipes[nj_network$Pipes$Status == "Open", c("ID", "Node1", "Node2")]  # Only open pipes
+pipes <- nj_network$Pipes[nj_network$Pipes$Status == "Open", c("ID", "Node1", "Node2", "Length")]  # only open pipes
 pipes$ID <- as.character(pipes$ID)
 pipes$Node1 <- as.character(pipes$Node1)
 pipes$Node2 <- as.character(pipes$Node2)
-colnames(pipes) <- c("id", "start", "end")
+pipes$Length <- as.numeric(pipes$Length)
+colnames(pipes) <- c("id", "start", "end", "length")
 
 pumps <- nj_network$Pumps[, c("ID", "Node1", "Node2", "Parameters")]
 pumps$ID <- as.character(pumps$ID)
