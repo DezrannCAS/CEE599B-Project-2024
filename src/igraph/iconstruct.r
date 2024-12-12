@@ -1,11 +1,13 @@
 rm(list = ls())
 
+here::i_am("src/igraph/iconstruct.r")
+
 library(igraph)
 library(tidyverse)
 library(here)
 
-# Paths to figures and data files
-fig_path <- here("fig")
+# Define paths
+output_path <- here("output")
 data_path <- here("data", "csv")
 
 # Load data
@@ -25,18 +27,34 @@ patterns <- read.csv(file.path(data_path, "patterns.csv"))
       # properties: "key","value","index"
 
 # Combine nodes: Junctions and Tanks
+# First column should be "name" then other are considered attributes
 nodes <- bind_rows(
   junctions %>%
     mutate(type = "junction", id = as.character(id)) %>%
-    select(id, x, y, z, demand, type),
+    select(name = id, x, y, z, demand, type),
   special_junctions %>%
     mutate(type = "special", id = as.character(id), pattern = as.character(pattern)) %>%
-    select(id, x, y, z, demand, pattern, type),
+    select(name = id, x, y, z, demand, pattern, type),
   tanks %>%
     mutate(type = "tank", id = as.character(id)) %>%
-    select(id, x, y, z, init, capacity, type)
+    select(name = id, x, y, z, init, capacity, type)
 )
 print(head(nodes, 10))
+
+# Verify that we do not have twice the same name
+duplicate_names <- nodes %>% 
+  count(name) %>% 
+  filter(n > 1)
+duplicate_nodes <- nodes %>% 
+  filter(name %in% duplicate_names)
+
+if (nrow(duplicate_names) > 0) {
+  cat("Duplicates found:\n")
+  print(duplicate_nodes)
+  stop()
+} else {
+  cat("No duplicate names found.\n")
+}
 
 # Combine edges: Pipes and Pumps
 # Edge list in the first two columns (`from` and `to`)
@@ -136,6 +154,6 @@ if (length(isolated_nodes) > 0) {
 }
 
 # Save graph
-graph_path <- here("original_graph.rds")
+graph_path <- file.path(output_path, "original_graph.rds")
 saveRDS(g, file = graph_path)
 message(paste("Graph saved successfully at:", graph_path))
