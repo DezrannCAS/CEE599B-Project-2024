@@ -15,5 +15,7 @@ Focus on vulnerability analysis (probably from Laplacian):
 * Identify bottlenecks or weak points in the network topology.
 * Nodes with high centrality may be more sensitive to demand variations: assess sensitivity to demand changes
 
+First analysis will probably be on load, and recreate patterns at tank so that it aligns with demand. Than based on this we should 
+have signed signals (positive for demand and negative fro influx). 
 
-        # igraph automatically removes edge when using delete_vertices()
+resolve this issue of "id" vs. "name" in igraph

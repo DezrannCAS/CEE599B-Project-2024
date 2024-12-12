@@ -4,66 +4,71 @@ library(here)
 
 # ----------- FUNCTIONS -----------
 
+is_pipe_edge <- function(g, v1, v2) {
+  edge_id <- get_edge_ids(g, c(v1, v2))
+  if (edge_id == 0) return(FALSE)
+  
+  edge_type <- edge_attr(g, "type", edge_id)
+  return(!is.null(edge_type) && edge_type == "pipe")
+}
+
 # Function to traverse a chain starting from a degree-2 vertex
 traverse <- function(g, start_vertex) {
-  chain <- c(start_vertex)  # Initialize the chain with the starting vertex
-  visited <- c()  # To track visited vertices
-  
+  chain <- c(start_vertex)
+  visited <- c()
+
   # Helper function to extend the chain in a given direction
   extend_chain <- function(vertex, direction) {
     repeat {
-      neighbors <- neighbors(g, vertex) %>% as_ids()  # Get neighbors as names
-      neighbors <- setdiff(neighbors, visited)  # Exclude visited vertices
-      
-      visited <<- union(visited, vertex)  # Mark current vertex as visited
-      
+      neighbors <- neighbors(g, vertex) %>% as_ids()  # get neighbors as names
+      neighbors <- setdiff(neighbors, visited)  # exclude visited vertices
+
+      visited <<- union(visited, vertex)  # mark current vertex as visited
+
       if (length(neighbors) == 2) {
-        # Choose the neighbor based on direction
-        next_vertex <- if (direction == "up") neighbors[1] else neighbors[2]
+        next_vertex <- if (direction == "up") neighbors[1] else neighbors[2] # choose based on direction
       } else if (length(neighbors) == 1) {
-        # If only one neighbor remains, continue extending
         next_vertex <- neighbors[1]
       } else {
-        break  # Stop if no valid extension is possible
+        break
       }
       
-      # Ensure the next vertex is degree 2, else stop
-      if (degree(g, next_vertex) != 2) break
+      # Ensure the next vertex is degree 2 (and normal junction), else stop
+      if (degree(g, next_vertex) != 2 || V(g)[next_vertex]$type != "junction" || !is_pipe_edge(g, vertex, next_vertex)) break
       
       chain <<- c(chain, next_vertex)
-      vertex <- next_vertex  # Continue extending
+      vertex <- next_vertex  # continue extending
     }
   }
   
   # Extend the chain in both directions
   extend_chain(start_vertex, "up")
-  chain <- rev(chain)  # Reverse to extend in the other direction
-  extend_chain(chain[1], "down")
+  chain <- rev(chain)  # reverse to extend in the other direction
+  extend_chain(start_vertex, "down")
   
   return(unique(chain))
 }
 
 # Function to identify all chains of degree-2 vertices
 identify_chains <- function(g) {
-  chains <- list()  # To store all identified chains
-  visited <- c()  # To track all checked vertices
-  
+  chains <- list()
+  visited <- c()
+
   # Get vertex names of degree-2 nodes
   degree_2_nodes <- V(g)[degree(g) == 2]$name
-  
+
   for (v in degree_2_nodes) {
-    if (v %in% visited) {
-      next  # Skip if the vertex has already been checked
-    }
-    
+    if (v %in% visited) next  # skip if already checked
+    if (V(g)[v]$type != "junction") next  # skip if not a normal junction
+
     # Find the chain starting from this vertex
     chain <- traverse(g, v)
-    
+
     # Add the chain to the results and mark vertices as visited
     chains <- append(chains, list(chain))
     visited <- union(visited, chain)
   }
-  
+
   return(chains)
 }
 
