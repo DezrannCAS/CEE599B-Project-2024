@@ -1,3 +1,7 @@
+rm(list = ls())
+
+here::i_am("src/igraph/reduce.r")
+
 library(igraph)
 library(dplyr)
 library(here)
@@ -54,7 +58,9 @@ reduce_graph <- function(g, chains) {
     last_node <- chain[length(chain)]
 
     first_neighbors <- neighbors(g_reduced, first_node)
+    print(first_neighbors)
     last_neighbors <- neighbors(g_reduced, last_node)
+    print(last_neighbors)
     
     # Filter external nodes that are not in the current chain
     external_nodes <- c()
@@ -64,6 +70,7 @@ reduce_graph <- function(g, chains) {
       }
     }
     external_nodes <- unique(external_nodes)
+    print(external_nodes)
 
     # Add edges
     for (ext_node in external_nodes) {
@@ -72,8 +79,12 @@ reduce_graph <- function(g, chains) {
 
     # Remove the original chain nodes
     for (node in chain) {
-      print(node)
-      g_reduced <- delete_vertices(g_reduced, node)
+      vertex_id <- V(g_reduced)[name == node]
+      if (length(vertex_id) > 0) {
+          g_reduced <- delete_vertices(g_reduced, vertex_id)
+      } else {
+        stop("Something wrong here")
+      }
     }
     # igraph automatically removes edge when using delete_vertices()
   }
