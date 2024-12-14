@@ -115,8 +115,15 @@ original_graph <- readRDS(graph_path)
 message(paste("Graph successfully loaded from:", graph_path))
 
 graph2_path <- file.path(output_path, "reduced_graphv2.rds")
-reduced_graph <- readRDS(graph2_path)
+g_reduc <- readRDS(graph2_path)
 message(paste("Graph successfully loaded from:", graph2_path))
+
+junction_vertices <- V(g_reduc)[type %in% c("junction", "aggregated")]
+reduced_graph <- induced_subgraph(g_reduc, junction_vertices)
+
+num_vertices <- vcount(reduced_graph)
+num_edges <- ecount(reduced_graph)
+cat("The subgraph has", num_vertices, "vertices and", num_edges, "edges.\n")
 
 
 print_dataset_info(original_graph)
